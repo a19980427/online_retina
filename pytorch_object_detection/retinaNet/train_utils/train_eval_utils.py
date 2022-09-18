@@ -4,9 +4,9 @@ import time
 
 import torch
 
-from .coco_utils import get_coco_api_from_dataset
-from .coco_eval import CocoEvaluator
 import train_utils.distributed_utils as utils
+from .coco_eval import CocoEvaluator
+from .coco_utils import get_coco_api_from_dataset
 
 
 def train_one_epoch(model, optimizer, data_loader, device, epoch,
@@ -68,7 +68,6 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch,
 
 @torch.no_grad()
 def evaluate(model, data_loader, device):
-
     cpu_device = torch.device("cpu")
     model.eval()
     metric_logger = utils.MetricLogger(delimiter="  ")

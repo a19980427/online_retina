@@ -1,15 +1,15 @@
+import json
 import os
 import time
-import json
 
+import matplotlib.pyplot as plt
 import torch
 from PIL import Image
-import matplotlib.pyplot as plt
-
 from torchvision import transforms
-from network_files import RetinaNet
+
 from backbone import resnet50_fpn_backbone, LastLevelP6P7
 from draw_box_utils import draw_objs
+from network_files import RetinaNet
 
 
 def create_model(num_classes):
@@ -28,7 +28,7 @@ def time_synchronized():
     return time.time()
 
 
-def main():
+def main(picture_path):
     # get devices
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     print("using {} device.".format(device))
@@ -38,7 +38,7 @@ def main():
     model = create_model(num_classes=20)
 
     # load train weights
-    weights_path = "./save_weights/model.pth"
+    weights_path = r"T:/retinanet_voc_weights.pth"
     assert os.path.exists(weights_path), "{} file dose not exist.".format(weights_path)
     model.load_state_dict(torch.load(weights_path, map_location='cpu')["model"])
     model.to(device)
@@ -52,7 +52,7 @@ def main():
     category_index = {str(v): str(k) for k, v in class_dict.items()}
 
     # load image
-    original_img = Image.open("./test.jpg")
+    original_img = Image.open(picture_path).convert('RGB')
 
     # from pil image to tensor, do not normalize image
     data_transform = transforms.Compose([transforms.ToTensor()])
@@ -94,6 +94,9 @@ def main():
         plot_img.save("test_result.jpg")
 
 
-if __name__ == '__main__':
-    main()
+import sys
 
+# "C:\Users\大橘\Desktop\2.png"
+if __name__ == '__main__':
+    picture_path = sys.argv[1]
+    main(picture_path)

@@ -1,14 +1,14 @@
-import os
 import json
+import os
 import time
 
+import matplotlib.pyplot as plt
 import torch
 from PIL import Image
-import matplotlib.pyplot as plt
 
 import transforms
-from src import SSD300, Backbone
 from draw_box_utils import draw_objs
+from src import SSD300, Backbone
 
 
 def create_model(num_classes):
@@ -34,7 +34,7 @@ def main():
     model = create_model(num_classes=num_classes)
 
     # load train weights
-    train_weights = "./save_weights/ssd300-14.pth"
+    train_weights = "./save_weights/ssd300-17.pth"
     model.load_state_dict(torch.load(train_weights, map_location='cpu')['model'])
     model.to(device)
 
@@ -47,7 +47,7 @@ def main():
     category_index = {str(v): str(k) for k, v in class_dict.items()}
 
     # load image
-    original_img = Image.open("./test.jpg")
+    original_img = Image.open(r"T:\pictures\1720081133545144717.jpg").convert('RGB')
 
     # from pil image to tensor, do not normalize image
     data_transform = transforms.Compose([transforms.Resize(),

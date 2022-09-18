@@ -1,12 +1,12 @@
-import os
 import datetime
+import os
 
 import torch
 
+import train_utils.train_eval_utils as utils
 import transforms
 from my_dataset import VOCDataSet
 from src import SSD300, Backbone
-import train_utils.train_eval_utils as utils
 from train_utils import get_coco_api_from_dataset
 
 
@@ -90,7 +90,7 @@ def main(parser_data):
                                                   num_workers=nw,
                                                   collate_fn=train_dataset.collate_fn)
 
-    model = create_model(num_classes=args.num_classes+1)
+    model = create_model(num_classes=args.num_classes + 1)
     model.to(device)
 
     # define optimizer
@@ -174,18 +174,18 @@ if __name__ == '__main__':
     # 检测的目标类别个数，不包括背景
     parser.add_argument('--num_classes', default=20, type=int, help='num_classes')
     # 训练数据集的根目录(VOCdevkit)
-    parser.add_argument('--data-path', default='./', help='dataset')
+    parser.add_argument('--data-path', default=r'T:\PascalVOC2012', help='dataset')
     # 文件保存地址
     parser.add_argument('--output-dir', default='./save_weights', help='path where to save')
     # 若需要接着上次训练，则指定上次训练保存权重文件地址
-    parser.add_argument('--resume', default='', type=str, help='resume from checkpoint')
+    parser.add_argument('--resume', default='D:\My Paper\deep-learning-for-image-processing\pytorch_object_detection\ssd\save_weights\ssd300-14.pth', type=str, help='resume from checkpoint')
     # 指定接着从哪个epoch数开始训练
     parser.add_argument('--start_epoch', default=0, type=int, help='start epoch')
     # 训练的总epoch数
-    parser.add_argument('--epochs', default=15, type=int, metavar='N',
+    parser.add_argument('--epochs', default=25, type=int, metavar='N',
                         help='number of total epochs to run')
     # 训练的batch size
-    parser.add_argument('--batch_size', default=4, type=int, metavar='N',
+    parser.add_argument('--batch_size', default=2, type=int, metavar='N',
                         help='batch size when training.')
 
     args = parser.parse_args()
