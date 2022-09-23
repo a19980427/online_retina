@@ -6,9 +6,9 @@ from typing import Dict, List, Tuple, Optional, Union
 import torch
 from torch import nn, Tensor
 
+from . import boxes as box_ops
 from . import det_utils
 from .anchor_utils import AnchorsGenerator
-from . import boxes as box_ops
 from .losses import sigmoid_focal_loss
 from .transform import GeneralizedRCNNTransform
 
@@ -324,7 +324,7 @@ class RetinaNet(nn.Module):
         self.anchor_generator = anchor_generator
 
         if head is None:
-            head = RetinaNetHead(backbone.out_channels,   # in_channels
+            head = RetinaNetHead(backbone.out_channels,  # in_channels
                                  anchor_generator.num_anchors_per_location()[0],  # num_anchors
                                  num_classes)  # num_classes
         self.head = head
@@ -410,7 +410,7 @@ class RetinaNet(nn.Module):
                 scores_per_level, idxs = scores_per_level.topk(num_topk)
                 topk_idxs = topk_idxs[idxs]
 
-                anchor_idxs = topk_idxs // num_classes
+                anchor_idxs = torch.div(topk_idxs, num_classes, rounding_mode='trunc')  # topk_idxs // num_classes
                 labels_per_level = topk_idxs % num_classes
 
                 boxes_per_level = self.box_coder.decode_single(box_regression_per_level[anchor_idxs],
